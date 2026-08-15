@@ -1,0 +1,36 @@
+@{
+    var currentRecipe = ViewBag.Recipe as string;
+}
+
+<div class="recipe-search-card">
+    <form autocomplete="off" asp-controller="Recipe" asp-action="Search" method="get" class="recipe-search-form">
+        <label class="visually-hidden" for="tags">Search recipes</label>
+        <div class="recipe-search-input ui-widget">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="tags" placeholder="Search recipes or ingredients..." class="form-control" name="recipe" value="@currentRecipe" autocomplete="off" autocapitalize="none" enterkeyhint="search" />
+        </div>
+        <button type="submit" class="btn btn-primary">Search Recipes</button>
+        @if (!string.IsNullOrWhiteSpace(currentRecipe))
+        {
+            <a class="btn btn-outline-primary recipe-clear-link" asp-controller="Recipe" asp-action="Index">Clear</a>
+        }
+    </form>
+    <div id="recentSearches" class="recent-searches" aria-live="polite"></div>
+</div>
+
+<script>
+    window.addEventListener("load", function () {
+        var availableTags = [
+            "Mushrooms", "Pumpkin", "Apple", "Banana", "Blackberry", "Blueberry", "Coconut",
+            "Grape", "Kiwifruit", "Mango", "Orange", "Papaya", "Pineapple", "Strawberry", "Watermelon",
+            "Salad", "Pizza", "Pasta", "Popcorn", "Hamburger", "Pie", "Cake", "Kebab", "Poutine",
+            "Seafood", "Chips", "Fries", "Masala", "Chicken", "Chocolate", "Sushi", "Ice Cream"
+        ];
+        if (window.jQuery && $.fn.autocomplete) {
+            $("#tags").autocomplete({
+            source: availableTags,
+            minLength: 2
+            });
+        }
+    });
+</script>

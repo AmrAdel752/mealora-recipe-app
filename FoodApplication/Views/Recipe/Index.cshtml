@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Recipes";
+}
+
+<div class="recipe-page">
+    <section class="recipe-page-header" aria-labelledby="recipePageTitle">
+        <p class="eyebrow">Mealora discovery</p>
+        <h1 id="recipePageTitle">Explore Recipes</h1>
+        <p>Search, discover, and save something delicious.</p>
+    </section>
+
+    <partial name="__SearchBar" />
+
+    <div class="recipe-layout">
+        <aside class="recipe-filter-panel position-sticky" id="recipe-list">
+            <div class="recipe-filter-heading">
+                <span>Browse by ingredient</span>
+            </div>
+            <partial name="_SideMenu" />
+        </aside>
+
+        <div class="recipe-results">
+            <section class="recipe-result-section" aria-labelledby="pizzaRecipesTitle">
+                <h2 id="pizzaRecipesTitle">Pizza</h2>
+                <div class="recipe-grid" id="pizzaRecipe"></div>
+            </section>
+            <section class="recipe-result-section" aria-labelledby="cakeRecipesTitle">
+                <h2 id="cakeRecipesTitle">Cake</h2>
+                <div class="recipe-grid" id="cakeRecipe"></div>
+            </section>
+            <section class="recipe-result-section" aria-labelledby="chickenRecipesTitle">
+                <h2 id="chickenRecipesTitle">Chicken</h2>
+                <div class="recipe-grid" id="chickenRecipe"></div>
+            </section>
+            <section class="recipe-result-section" aria-labelledby="chocolateRecipesTitle">
+                <h2 id="chocolateRecipesTitle">Chocolate</h2>
+                <div class="recipe-grid" id="chocolateRecipe"></div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetRecipes("Pizza", "pizzaRecipe", false);
+        GetRecipes("Cake", "cakeRecipe", false);
+        GetRecipes("Chocolate", "chocolateRecipe", false);
+        GetRecipes("Chicken", "chickenRecipe", false);
+    })
+</script>
+}

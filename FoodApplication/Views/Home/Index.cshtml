@@ -1,0 +1,145 @@
+@{
+    ViewData["Title"] = "Home";
+    var todaysPicks = new List<FoodApplication.Models.Recipe>
+    {
+        new()
+        {
+            Id = "5ed6604591c37cdc054bcc13",
+            Title = "Pizza",
+            Publisher = "Today's Picks",
+            Image_url = "http://forkify-api.herokuapp.com/images/BBQChickenPizzawithCauliflowerCrust5004699695624ce.jpg"
+        },
+        new()
+        {
+            Id = "5ed6604591c37cdc054bcf3d",
+            Title = "Cake",
+            Publisher = "Today's Picks",
+            Image_url = "http://forkify-api.herokuapp.com/images/gelatin_poke_cake2d07.jpg"
+        },
+        new()
+        {
+            Id = "5ed6604591c37cdc054bca24",
+            Title = "Strawberry",
+            Publisher = "Today's Picks",
+            Image_url = "http://forkify-api.herokuapp.com/images/344130b63.jpg"
+        }
+    };
+}
+
+<div class="home-page">
+    <section class="home-hero" aria-labelledby="homeHeroTitle">
+        <div class="home-hero-content">
+            <p class="eyebrow">Discover something delicious</p>
+            <h1 id="homeHeroTitle">Recipes for every craving.</h1>
+            <p class="hero-copy">
+                Explore inspiring recipes, discover new flavors, and turn everyday ingredients into something memorable.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary btn-lg" asp-controller="Recipe" asp-action="Index">Explore Recipes</a>
+                <a class="btn btn-outline-primary btn-lg" href="#recipe-search">Find a Recipe</a>
+            </div>
+        </div>
+        <div class="home-hero-media" aria-label="Fresh prepared recipe inspiration">
+            <img src="~/Images/CarouselImages/pexels-ella-olsson-1640777.jpg" alt="A colorful bowl of fresh vegetables and grains" />
+        </div>
+    </section>
+
+    <section class="home-search-panel" id="recipe-search" aria-labelledby="recipeSearchTitle">
+        <div>
+            <p class="eyebrow">Recipe Search</p>
+            <h2 id="recipeSearchTitle">Search the collection</h2>
+        </div>
+        <form asp-controller="Recipe" asp-action="Search" method="get" autocomplete="off" class="home-search-form">
+            <label class="visually-hidden" for="homeRecipeSearch">Search recipes</label>
+            <input id="homeRecipeSearch" class="form-control" type="search" name="recipe" placeholder="Search pasta, chicken, chocolate..." autocomplete="off" autocapitalize="none" enterkeyhint="search" />
+            <button class="btn btn-primary" type="submit">Search Recipes</button>
+        </form>
+        <div id="homeRecentSearches" class="recent-searches" aria-live="polite"></div>
+    </section>
+
+    <section id="recentlyViewedSection" class="home-section storage-section d-none" aria-labelledby="recentlyViewedTitle">
+        <div class="section-heading section-heading-split">
+            <div>
+                <p class="eyebrow">Recently Viewed</p>
+                <h2 id="recentlyViewedTitle">Recently Viewed</h2>
+            </div>
+        </div>
+        <div class="recipe-grid" id="recentlyViewedRecipes"></div>
+    </section>
+
+    <section class="home-section" aria-labelledby="popularDiscoveriesTitle">
+        <div class="section-heading">
+            <p class="eyebrow">Popular Discoveries</p>
+            <h2 id="popularDiscoveriesTitle">Start with a familiar craving.</h2>
+        </div>
+        <div class="discovery-grid">
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Pizza">
+                <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i>
+                <span>Pizza</span>
+            </a>
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Chicken">
+                <i class="fa-solid fa-drumstick-bite" aria-hidden="true"></i>
+                <span>Chicken</span>
+            </a>
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Cake">
+                <i class="fa-solid fa-cake-candles" aria-hidden="true"></i>
+                <span>Cake</span>
+            </a>
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Pasta">
+                <i class="fa-solid fa-bowl-food" aria-hidden="true"></i>
+                <span>Pasta</span>
+            </a>
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Chocolate">
+                <i class="fa-solid fa-cookie-bite" aria-hidden="true"></i>
+                <span>Chocolate</span>
+            </a>
+            <a class="discovery-chip" asp-controller="Recipe" asp-action="Search" asp-route-recipe="Breakfast">
+                <i class="fa-solid fa-mug-saucer" aria-hidden="true"></i>
+                <span>Breakfast</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="todaysPicksTitle">
+        <div class="section-heading section-heading-split">
+            <div>
+                <p class="eyebrow">Today's Picks</p>
+                <h2 id="todaysPicksTitle">A few delicious ideas to get you started.</h2>
+            </div>
+            <a class="section-link" asp-controller="Recipe" asp-action="Index">Browse all recipes</a>
+        </div>
+        <div class="picks-grid">
+            <partial name="~/Views/Recipe/_RecipeCard.cshtml" model="todaysPicks" />
+        </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="whyMealoraTitle">
+        <div class="section-heading">
+            <p class="eyebrow">Why Mealora</p>
+            <h2 id="whyMealoraTitle">A clearer way to move from idea to meal.</h2>
+        </div>
+        <div class="capability-grid">
+            <article class="capability-card">
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
+                <h3>Discover</h3>
+                <p>Explore recipes across a wide collection of ideas.</p>
+            </article>
+            <article class="capability-card">
+                <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                <h3>Cook</h3>
+                <p>View ingredients and recipe information in one clear place.</p>
+            </article>
+            <article class="capability-card">
+                <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                <h3>Save</h3>
+                <p>Keep the recipes you love within easy reach.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="home-final-cta" aria-labelledby="finalCtaTitle">
+        <h2 id="finalCtaTitle">Find your next favorite recipe.</h2>
+        <p>Explore something new, save what you love, and make your next meal more interesting.</p>
+        <a class="btn btn-primary btn-lg" asp-controller="Recipe" asp-action="Index">Browse Recipes</a>
+    </section>
+</div>

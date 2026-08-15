@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Recipe Details";
+}
+
+<div class="order-page">
+    <nav class="recipe-breadcrumb" aria-label="Recipe navigation">
+        <a asp-controller="Recipe" asp-action="Index">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            <span>Back to recipes</span>
+        </a>
+    </nav>
+
+    <div class="order-search">
+        <partial name="__SearchBar" />
+    </div>
+
+    <div class="order-layout">
+        <aside class="recipe-filter-panel position-sticky" id="recipe-list">
+            <div class="recipe-filter-heading">
+                <span>Browse by ingredient</span>
+            </div>
+            <partial name="_SideMenu" />
+        </aside>
+        <section class="order-detail-region" id="recipeDetails" aria-live="polite"></section>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+   $(document).ready(function (){
+        getOrderRecipe('@ViewBag.Id', 'recipeDetails');
+   });
+</script>
+}

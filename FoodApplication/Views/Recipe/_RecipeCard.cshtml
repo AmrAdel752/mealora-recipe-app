@@ -1,0 +1,46 @@
+@model IEnumerable<FoodApplication.Models.Recipe>
+
+@foreach (var recipe in Model)
+{
+    var recipeTitle = string.IsNullOrWhiteSpace(recipe.Title) ? "Untitled recipe" : recipe.Title;
+    var publisher = string.IsNullOrWhiteSpace(recipe.Publisher) ? "Unknown publisher" : recipe.Publisher;
+    var recipeId = recipe.Id ?? "";
+    var hasRecipeId = !string.IsNullOrWhiteSpace(recipeId);
+    var recipeUrl = hasRecipeId ? $"/Recipe/Order?id={Uri.EscapeDataString(recipeId)}" : null;
+    var hasImage = !string.IsNullOrWhiteSpace(recipe.Image_url);
+
+    <article class="recipe-card">
+        @if (hasRecipeId)
+        {
+            <a class="recipe-card-media @(hasImage ? "" : "recipe-card-media-fallback")" href="@recipeUrl" aria-label="View @recipeTitle">
+                @if (hasImage)
+                {
+                    <img src="@recipe.Image_url" alt="@recipeTitle" loading="lazy" onerror="this.parentElement.classList.add('recipe-card-media-fallback'); this.remove();" />
+                }
+            </a>
+        }
+        else
+        {
+            <div class="recipe-card-media recipe-card-media-fallback" role="img" aria-label="Image unavailable for @recipeTitle"></div>
+        }
+        <div class="recipe-card-body">
+            <div class="recipe-card-copy">
+                <h3 title="@recipeTitle">@recipeTitle</h3>
+                <p>@publisher</p>
+            </div>
+            <div class="recipe-card-actions">
+                @if (hasRecipeId)
+                {
+                    <a href="@recipeUrl" class="btn btn-primary">View Recipe</a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary" disabled>View Recipe</button>
+                }
+                <button type="button" class="addToCartIcon recipe-favorite" onclick="favoriteToggle.call(this)" data-recipeId="@recipeId" data-recipe-title="@recipeTitle" data-recipe-publisher="@publisher" data-recipe-image="@recipe.Image_url" aria-label="Save @recipeTitle" aria-pressed="false" disabled="@(!hasRecipeId)">
+                    <i class="fa-regular fa-heart fs-4" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </article>
+}

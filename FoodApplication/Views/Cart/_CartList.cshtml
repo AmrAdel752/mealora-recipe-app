@@ -1,0 +1,50 @@
+@model IEnumerable<FoodApplication.Models.Cart>
+
+@{
+    var cartItems = Model.ToList();
+}
+
+<div class="cart-preview">
+    @if (cartItems.Any())
+    {
+        <div class="cart-preview-list" aria-label="Cart preview">
+            @foreach (var cart in cartItems)
+            {
+                var recipeTitle = string.IsNullOrWhiteSpace(cart.Title) ? "Untitled recipe" : cart.Title;
+                var recipeId = cart.RecipeId ?? "";
+                var hasRecipeId = !string.IsNullOrWhiteSpace(recipeId);
+                var recipeUrl = hasRecipeId ? $"/Recipe/Order?id={Uri.EscapeDataString(recipeId)}" : null;
+                var hasImage = !string.IsNullOrWhiteSpace(cart.Image_url);
+
+                <div class="cart-preview-item">
+                    @if (hasRecipeId)
+                    {
+                        <a class="cart-preview-media @(hasImage ? "" : "recipe-card-media-fallback")" href="@recipeUrl" aria-label="View @recipeTitle">
+                            @if (hasImage)
+                            {
+                                <img src="@cart.Image_url" class="cartListImg" alt="@recipeTitle" loading="lazy" onerror="this.parentElement.classList.add('recipe-card-media-fallback'); this.remove();" />
+                            }
+                        </a>
+                        <a class="cart-preview-title" href="@recipeUrl" title="@recipeTitle">@recipeTitle</a>
+                    }
+                    else
+                    {
+                        <div class="cart-preview-media recipe-card-media-fallback" role="img" aria-label="Image unavailable for @recipeTitle"></div>
+                        <span class="cart-preview-title">@recipeTitle</span>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="cart-preview-empty">
+            <strong>Your cart is empty</strong>
+            <span>Explore recipes and add something delicious.</span>
+        </div>
+    }
+
+    <div class="cart-preview-footer">
+        <a href="/Cart">Go To Cart</a>
+    </div>
+</div>

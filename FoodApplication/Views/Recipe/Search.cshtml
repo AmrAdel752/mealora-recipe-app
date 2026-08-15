@@ -1,0 +1,45 @@
+@{
+    var recipeQuery = ViewBag.Recipe as string ?? "";
+    ViewData["Title"] = string.IsNullOrWhiteSpace(recipeQuery) ? "Search Recipes" : $"Search results for {recipeQuery}";
+}
+
+<div class="recipe-page">
+    <section class="recipe-page-header" aria-labelledby="searchPageTitle">
+        <p class="eyebrow">Mealora discovery</p>
+        <h1 id="searchPageTitle">Explore Recipes</h1>
+        <p>Search, discover, and save something delicious.</p>
+    </section>
+
+    <partial name="__SearchBar" />
+
+    <div class="recipe-layout">
+        <aside class="recipe-filter-panel position-sticky" id="recipe-list">
+            <div class="recipe-filter-heading">
+                <span>Browse by ingredient</span>
+            </div>
+            <partial name="_SideMenu" />
+        </aside>
+
+        <section class="recipe-results recipe-result-section" aria-labelledby="searchResultsTitle">
+            <div class="search-result-heading">
+                @if (!string.IsNullOrWhiteSpace(recipeQuery))
+                {
+                    <h2 id="searchResultsTitle">Results for &ldquo;@recipeQuery&rdquo;</h2>
+                }
+                else
+                {
+                    <h2 id="searchResultsTitle">Search Recipes</h2>
+                }
+            </div>
+            <div class="recipe-grid" id="searchRecipes"></div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetRecipes(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(recipeQuery)), 'searchRecipes', true);
+    });
+</script>
+}

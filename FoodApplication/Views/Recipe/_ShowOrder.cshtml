@@ -1,0 +1,156 @@
+@model FoodApplication.Models.OrderRecipeDetails
+
+@{
+    var recipeTitle = string.IsNullOrWhiteSpace(Model.Title) ? "Untitled recipe" : Model.Title;
+    var publisher = string.IsNullOrWhiteSpace(Model.Publisher) ? null : Model.Publisher;
+    var cartPublisher = publisher ?? "Unknown publisher";
+    var hasImage = !string.IsNullOrWhiteSpace(Model.Image_url);
+}
+
+<article class="order-detail">
+    <section class="order-hero" aria-labelledby="orderRecipeTitle">
+        <div class="order-hero-media @(hasImage ? "" : "recipe-card-media-fallback")">
+            @if (hasImage)
+            {
+                <img src="@Model.Image_url" alt="@recipeTitle" id="order-img" loading="lazy" onerror="this.parentElement.classList.add('recipe-card-media-fallback'); this.remove();" />
+            }
+        </div>
+        <div class="order-hero-content">
+            <p class="eyebrow">Recipe Details</p>
+            <h1 id="orderRecipeTitle">@recipeTitle</h1>
+            @if (publisher is not null)
+            {
+                <p class="order-publisher">@publisher</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.Id))
+            {
+                <button type="button" class="addToCartIcon recipe-favorite order-favorite" onclick="favoriteToggle.call(this)" data-recipeId="@Model.Id" data-recipe-title="@recipeTitle" data-recipe-publisher="@Model.Publisher" data-recipe-image="@Model.Image_url" aria-label="Save @recipeTitle" aria-pressed="false">
+                    <i class="fa-regular fa-heart fs-4" aria-hidden="true"></i>
+                    <span>Save favorite</span>
+                </button>
+            }
+        </div>
+    </section>
+
+    <div class="order-content-grid">
+        <section class="ingredient-panel" aria-labelledby="ingredientsTitle">
+            <div class="section-heading">
+                <p class="eyebrow">Ingredients</p>
+                <h2 id="ingredientsTitle">What you will need</h2>
+            </div>
+
+            @if (Model.Ingredients.Any())
+            {
+                <div class="ingredient-list">
+                    @foreach (var ing in Model.Ingredients)
+                    {
+                        var description = string.IsNullOrWhiteSpace(ing.Description) ? "Ingredient" : ing.Description;
+                        var quantity = string.IsNullOrWhiteSpace(ing.Quantity) ? null : ing.Quantity;
+                        var unit = string.IsNullOrWhiteSpace(ing.unit) ? null : ing.unit;
+
+                        <div class="ingredient-item">
+                            <div>
+                                <h3>@description</h3>
+                                <p>
+                                    @if (quantity is not null || unit is not null)
+                                    {
+                                        <span>@quantity @unit</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Amount as needed</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="recipe-state">
+                    <h3>No ingredients listed</h3>
+                    <p>This recipe did not include ingredient details.</p>
+                </div>
+            }
+        </section>
+
+        <aside class="order-summary-wrap" aria-labelledby="orderSummaryTitle">
+            <form autocomplete="off" method="post" class="order-summary-card">
+                <input type="hidden" value="@Model.Id" name="RecipeId" />
+                <input type="hidden" value="@Model.Title" name="RecipeName" />
+                <input type="hidden" value="@ViewBag.UserId" name="UserId" />
+
+                <div class="order-summary-header">
+                    <p class="eyebrow">Mealora Order</p>
+                    <h2 id="orderSummaryTitle">Order Summary</h2>
+                </div>
+
+                <div class="auth-validation" aria-live="assertive">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger", role = "alert" })
+                </div>
+
+                <div class="summary-lines">
+                    <div class="summary-line">
+                        <span>Price</span>
+                        <strong>
+                            <i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i>
+                            <input type="text" id="Price" name="Price" value="@ViewBag.Price" readonly aria-label="Price" inputmode="numeric">
+                        </strong>
+                    </div>
+
+                    <div class="summary-line summary-line-quantity" id="qtySection">
+                        <span id="quantityLabel">Quantity</span>
+                        <div class="quantity-control" role="group" aria-labelledby="quantityLabel">
+                            <button type="button" onclick="quantity('dec')" aria-label="Decrease quantity">
+                                <i class="fa-solid fa-minus" aria-hidden="true"></i>
+                            </button>
+                            <input id="qty" type="text" value="1" name="Quantity" readonly aria-label="Current quantity" inputmode="numeric" aria-live="polite" />
+                            <button type="button" onclick="quantity('inc')" aria-label="Increase quantity">
+                                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Delivery Charge</span>
+                        <strong class="text-success">Free</strong>
+                    </div>
+                </div>
+
+                <div class="address-field">
+                    <label class="form-label" for="orderAddress">Delivery Address</label>
+                    <input type="text" class="form-control" id="orderAddress" name="Address" value="@ViewBag.Address" autocomplete="street-address">
+                    @Html.ValidationMessage("Address", "", new { @class = "field-validation-error", role = "alert" })
+                </div>
+
+                <div class="summary-total">
+                    <span>Total</span>
+                    <strong>
+                        <i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i>
+                        <input id="totalAmount" type="text" name="TotalAmount" readonly value="@ViewBag.Price" aria-label="Total amount" inputmode="numeric" aria-live="polite">
+                    </strong>
+                </div>
+
+                <button type="submit" class="btn btn-success order-submit">
+                    Place Order
+                </button>
+                @if (!string.IsNullOrWhiteSpace(Model.Id))
+                {
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <button type="button" class="btn btn-outline-primary order-cart-action" onclick="addRecipeToCart(this)" data-recipeId="@Model.Id" data-recipe-title="@recipeTitle" data-recipe-publisher="@cartPublisher" data-recipe-image="@Model.Image_url">
+                            Add to Cart
+                        </button>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-primary order-cart-action" asp-controller="Account" asp-action="Login">
+                            Login to Add to Cart
+                        </a>
+                    }
+                }
+            </form>
+        </aside>
+    </div>
+</article>

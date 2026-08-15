@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Favorites";
+}
+
+<div class="favorites-page">
+    <section class="recipe-page-header" aria-labelledby="favoritesPageTitle">
+        <p class="eyebrow">Mealora Favorites</p>
+        <h1 id="favoritesPageTitle">Favorites</h1>
+        <p>Recipes you saved for later.</p>
+    </section>
+
+    <section id="favoritesContent" class="favorites-content" aria-live="polite"></section>
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        renderFavoritesPage('favoritesContent');
+    });
+</script>
+}

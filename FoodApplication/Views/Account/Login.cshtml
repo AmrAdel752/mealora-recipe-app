@@ -1,0 +1,74 @@
+@model FoodApplication.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section class="auth-page auth-page-login" aria-labelledby="loginTitle">
+    <div class="auth-card">
+        <div class="auth-form-panel">
+            <div class="auth-form-header">
+                <p class="eyebrow">Mealora account</p>
+                <h1 id="loginTitle">Welcome back</h1>
+                <p>Sign in to continue exploring Mealora.</p>
+            </div>
+
+            <form autocomplete="off" method="post" class="auth-form">
+                <div class="auth-validation" aria-live="assertive">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger", role = "alert" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "you@example.com", type = "email", autocomplete = "email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "field-validation-error", role = "alert" })
+                </div>
+
+                <div class="form-field">
+                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                    <div class="password-field">
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Enter your password", type = "password", autocomplete = "current-password" })
+                        <button class="password-toggle" type="button" data-password-toggle="Password" aria-label="Show password" aria-pressed="false">
+                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "field-validation-error", role = "alert" })
+                </div>
+
+                <button class="btn btn-primary btn-lg auth-submit" type="submit">
+                    <span>Sign In</span>
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+
+                <p class="auth-switch">
+                    New to Mealora?
+                    <a asp-controller="Account" asp-action="Register">Create an account</a>
+                </p>
+            </form>
+        </div>
+
+        <aside class="auth-media-panel" aria-label="Mealora recipe inspiration">
+            <img src="~/Images/crispy-french-fries-with-ketchup-mayonnaise.jpg" alt="Crispy fries with sauces" />
+            <div class="auth-media-copy">
+                <span>Discover. Cook. Enjoy.</span>
+                <strong>Save ideas worth coming back to.</strong>
+            </div>
+        </aside>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll("[data-password-toggle]").forEach(function (button) {
+            button.addEventListener("click", function () {
+                var input = document.getElementById(button.getAttribute("data-password-toggle"));
+                var isHidden = input.type === "password";
+                input.type = isHidden ? "text" : "password";
+                button.setAttribute("aria-pressed", isHidden.toString());
+                button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+                button.querySelector("i").className = isHidden ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+            });
+        });
+    </script>
+}
